@@ -1,29 +1,32 @@
 package org.example.Controller;
 
+import jakarta.ws.rs.core.MediaType;
 import org.example.DAO.JobsDAO;
+import org.example.JobsFilterDto.JobsFilterDto;
 import org.example.Models.Jobs;
 import jakarta.ws.rs.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 
     @Path("/Jobs")
-    public class JobController {
+    public class JobsController {
 
         JobsDAO dao = new JobsDAO();
 
         @GET
-        public ArrayList<Jobs> getAllJobs() {
-
+        @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+        public ArrayList<Jobs> getAllJobs(@BeanParam JobsFilterDto filter) {
             try {
-                return dao.selectAlljobs();
+                return dao.selectAlljobs(filter);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
 
         @GET
-        @Path("{deptId}")
-        public Jobs getJobs(@PathParam("deptId") int JobId) {
+        @Path("{jobId}")
+        public Jobs getJobs(@PathParam("jobId") int JobId) {
 
             try {
                 return dao.selectJob(JobId);
@@ -34,7 +37,7 @@ import java.util.ArrayList;
 
         @DELETE
         @Path("{JobId}")
-        public void deleteDepartment(@PathParam("JobId") int JobId) {
+        public void deleteJobs(@PathParam("JobId") int JobId) {
 
             try {
                 dao.DeleteJob(JobId);
