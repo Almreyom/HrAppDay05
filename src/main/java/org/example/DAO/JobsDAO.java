@@ -1,18 +1,18 @@
 package org.example.DAO;
 
-import org.example.JobsFilterDto.JobsFilterDto;
+import org.example.FilterDto.JobsFilterDto;
 import org.example.Models.Jobs;
 
 import java.sql.*;
 import java.util.ArrayList;
     public class JobsDAO {
 
-        private static final String URL =  "jdbc:sqlite:C:\\Users\\dev\\Downloads\\hr.db";
-        private static final String SELECT_ALL_JOBS = "select * from JOBsi";
-        private static final String SELECT_JOBS_WITH_LOC = "select * from departments where location_id = ?";
+        private static final String URL =  "jdbc:sqlite:C:\\Users\\dev\\IdeaProjects\\HrAppDay07\\hr.db";
+        private static final String SELECT_ALL_JOBS = "select * from jobs";
+        private static final String SELECT_JOBS_WITH_LOC = "select * from jobs where location_id = ?";
         private static final String SELECT_JOBS_WITH_LOC_PAGINATION = "select * from jobs where min_salary = ? order by job_id limit ? offset ? ";
         private static final String SELECT_JOBS_WITH_PAGINATION = "select * from jobs order by job_id limit ? offset ?";
-        private static final String SELECT_ONE_JOBS = "select * from JOBS where job_id = ?";
+        private static final String SELECT_ONE_JOBS = "select * from jobs where job_id = ?";
         private static final String INSERT_JOBS = "insert into jobs values (?, ?, ?,?)";
         private static final String UPDATE_JOBS = "update jobs set job_name = ?, job_id = ? where job_id = ?";
         private static final String DELETE_JOBS = "delete from jobs where jobd_id = ?";

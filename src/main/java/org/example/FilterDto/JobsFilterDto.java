@@ -1,4 +1,4 @@
-package org.example.JobsFilterDto;
+package org.example.FilterDto;
 
 import jakarta.ws.rs.QueryParam;
 

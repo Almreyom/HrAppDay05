@@ -4,7 +4,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.StreamingOutput;
+import jakarta.ws.rs.core.UriInfo;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -19,17 +19,28 @@ public class MyResource {
      * @return String that will be returned as a text/plain response.
      */
     @GET
+    @Path("{myVar}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getIt(
-            @HeaderParam("apikey")String apiky,
-            @CookieParam("username")String username ,
-            @Context HttpHeaders headers){
+            @HeaderParam("apiKey") String apiKey,
+            @CookieParam("username") String username,
+            @Context HttpHeaders headers,
+            @Context UriInfo uriInfo
+    ) {
+
         System.out.println(headers.getDate());
         System.out.println(headers.getLanguage());
         System.out.println(headers.getMediaType());
         System.out.println(headers.getCookies());
-            return "Got it! name;"+username+"apikey"+apiky;
-   // public String getIt() {
-        //return "Got it!";
+        System.out.println("---------------");
+        System.out.println(uriInfo.getAbsolutePath());
+        System.out.println(uriInfo.getPathSegments());
+        System.out.println(uriInfo.getQueryParameters());
+        System.out.println(uriInfo.getQueryParameters().get("locId"));
+
+        return "Got it! name: " + username + " , apiKey: " + apiKey;
     }
+
+
+
 }
