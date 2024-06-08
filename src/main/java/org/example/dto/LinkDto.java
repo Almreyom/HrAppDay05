@@ -1,4 +1,5 @@
-package org.example.FilterDto;
+package org.example.dto;
+
 
 public class LinkDto {
 
@@ -20,4 +21,5 @@ public class LinkDto {
     public void setRel(String rel) {
         this.rel = rel;
     }
+
 }

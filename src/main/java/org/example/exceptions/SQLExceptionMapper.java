@@ -1,4 +1,4 @@
-package org.example.Exceptions;
+package org.example.exceptions;
 
 
 import jakarta.ws.rs.core.Response;

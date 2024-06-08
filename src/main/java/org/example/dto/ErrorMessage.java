@@ -1,4 +1,4 @@
-package org.example.FilterDto;
+package org.example.dto;
 
 
 public class ErrorMessage {

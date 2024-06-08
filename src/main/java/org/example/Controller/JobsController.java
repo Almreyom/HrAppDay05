@@ -1,120 +1,144 @@
 package org.example.Controller;
-
 import jakarta.ws.rs.core.*;
-import org.example.DAO.JobsDAO;
-import org.example.Exceptions.DataNotFoundException;
-import org.example.FilterDto.JobsDto;
-import org.example.FilterDto.JobsFilterDto;
-import org.example.Models.Jobs;
+import org.example.dto.JobFilterDto;
+import org.example.dao.JobsDAO;
 import jakarta.ws.rs.*;
+
+import org.example.dto.JobsDto;
+import org.example.exceptions.DataNotFoundException;
+import org.example.models.Jobs;
 
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-    @Path("/Jobs")
-    public class JobsController {
-
-        JobsDAO dao = new JobsDAO();
-        @Context
-        UriInfo uriInfo;
-        @Context
-        HttpHeaders headers;
-        @Path("/departments")
-
-            @GET
-            @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-            public Response getAllJobs(
-                    @BeanParam JobsFilterDto filter
-            ) {
-                try {
-                    GenericEntity<ArrayList<Jobs>> j = new GenericEntity<ArrayList<Jobs>>(dao.selectAlljobs(filter)) {};
-                    if(headers.getAcceptableMediaTypes().contains(MediaType.valueOf(MediaType.APPLICATION_XML))) {
-                        return Response
-                                .ok(j)
-                                .type(MediaType.APPLICATION_XML)
-                                .build();
-                    }
-
-                    return Response
-//                    .ok()
-//                    .entity(depts)
-//                    .type(MediaType.APPLICATION_JSON)
-                            .ok(j, MediaType.APPLICATION_JSON)
-                            .build();
-
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
 
 
-        @GET
-        @Path("{deptId}")
-        public Response getJobs(@PathParam("Job_Id") int Job_Id) throws SQLException {
+@Path("/jobs")
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "text/csv"})
+public class JobsController {
 
-            try {
-                Jobs j  = dao.selectJob(Job_Id);
+    JobsDAO dao = new JobsDAO();
+    Jobs jobs = new Jobs();
+    @Context UriInfo uriInfo;
+    @Context HttpHeaders headers;
 
-                if (j == null) {
-                    throw new DataNotFoundException("Job " + Job_Id + "Not found");
-                }
+    @GET
+    public Response SELECT_ALL_JOBS(
+            @BeanParam JobFilterDto filter
+    ) {
 
-                JobsDto Jto = new JobsDto();
-                Jto.setJobId(Jto.getJobId());
-                Jto.setJobName(Jto.getJobName());
-                Jto.setMin_salary(Jto.getMin_salary());
-
-                return Response.ok(Jto).build();
-            }
-            catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        @DELETE
-        @Path("{JobId}")
-        public void deleteJobs(@PathParam("JobId") int JobId) {
-
-            try {
-                dao.DeleteJob(JobId);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @POST
-        @Consumes(MediaType.APPLICATION_XML)
-        public Response setInsertJob(Jobs j) {
-
-            try {
-                dao.setInsertJob(j);
-                NewCookie cookie = (new NewCookie.Builder("username")).value("OOOOO").build();
-                URI uri = uriInfo.getAbsolutePathBuilder().path(j.getJob_Id()+ "").build();
+        try {
+            GenericEntity<ArrayList<Jobs>> jobs = new GenericEntity<ArrayList<Jobs>>(dao.SELECT_ALL_JOBS(filter.getMin_salary())) {};
+            if(headers.getAcceptableMediaTypes().contains(MediaType.valueOf(MediaType.APPLICATION_XML))) {
                 return Response
-                        .created(uri)
-                        .cookie(cookie)
-                        .header("Created by", "Wael")
+                        .ok(jobs)
+                        .type(MediaType.APPLICATION_XML)
                         .build();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
             }
-        }
-
-        @PUT
-        @Path("{JobId}")
-        public void setUpdateJob(@PathParam("JobId") int JobtId, Jobs j) {
-
-            try {
-                j.setJob_Id(JobtId);
-                dao.setUpdateJob(j);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            else if(headers.getAcceptableMediaTypes().contains(MediaType.valueOf("text/csv"))) {
+                return Response
+                        .ok(jobs)
+                        .type("text/csv")
+                        .build();
             }
-        }
+            return Response
+                    .ok(jobs, MediaType.APPLICATION_JSON)
+                    .build();
 
-        @Path("{Job_Id}/Jobs")
-        public JobsController getJobsController() {
-            return new JobsController();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
+//    @GET
+//    @Path("{job_id}")
+ /*   public Jobs SELECT_ONE_JOBS(@PathParam("job_id") int job_id) {
+
+        try {
+            return dao.selectJob(job_id);
+        } catch (org.example.Exception e) {
+            throw new RuntimeException(e);
+        }
+    }*/
+
+    @GET
+    @Path("{job_id}")
+    public Response SELECT_ONE_JOBS(@PathParam("job_id") int job_id)throws SQLException {
+
+        try {
+            Jobs job = dao.selectJob(job_id);
+            if(job == null ){
+
+                throw new DataNotFoundException("jobs " + job_id + "Not found");
+            }
+            //headers.getAcceptableMediaTypes().contains(MediaType.valueOf(MediaType.APPLICATION_XML) {
+
+            JobsDto dto = new JobsDto();
+            dto.setJob_id(job.getJob_Id());
+            dto.setJob_title(job.getJob_title());
+            dto.setMin_salary(job.getMin_salary());
+            dto.setMax_salary(job.getMax_salary());
+
+            addLinks(dto);
+            return Response.ok(dto).build();
+            /* return Response
+                    .ok(dto)
+                    .type(MediaType.APPLICATION_JSON)
+                    .build(); */
+
+        } catch (ClassNotFoundException  e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void addLinks(JobsDto dto) {
+        URI selfUri = uriInfo.getAbsolutePath();
+        URI empUri = uriInfo.getAbsolutePathBuilder()
+                .path(JobsController.class).build();
+
+        dto.addLink(selfUri.toString(), "self");
+        dto.addLink(empUri.toString(), "employees");
+
+    }
+
+    @DELETE
+    @Path("{job_id}")
+    public void DELETE_JOB(@PathParam("job_id") int job_id) {
+
+        try {
+            dao.deleteJob(job_id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @POST
+    public Response INSERT_JOB(Jobs job) {
+
+        try {
+            dao.insertJob(job);
+            return Response
+                    .ok(job)
+                    .status(Response.Status.CREATED)
+                    .build();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PUT
+    @Path("{job_id}")
+    public void UPDATE_JOB(@PathParam("job_id") int job_id, Jobs job) {
+
+        try {
+            job.setJob_Id(job_id);
+            dao.updateJob(job);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+}

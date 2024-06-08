@@ -1,36 +1,41 @@
-package org.example.Models;
+package org.example.dto;
+
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
-public class Jobs {
+public class JobsDto {
 
-    private int job_Id;
+    private int job_id;
     private String job_title;
     private double min_salary;
     private double max_salary;
+    private ArrayList<LinkDto> links = new ArrayList<>();
 
-    public Jobs(int job_Id, String job_title, double min_salary, double max_salary) {
-        this.job_Id = job_Id;
+    public JobsDto() {
+    }
+
+    public JobsDto(int job_id, String job_title, double min_salary, double max_salary) {
+        this.job_id = job_id;
         this.job_title = job_title;
         this.min_salary = min_salary;
         this.max_salary = max_salary;
     }
 
-    public Jobs(ResultSet rs) throws SQLException {
-        job_Id = rs.getInt("job_Id");
+    public JobsDto(ResultSet rs)throws SQLException{
+        job_id = rs.getInt("job_id");
         job_title = rs.getString("job_title");
         min_salary = rs.getDouble("min_salary");
         max_salary = rs.getDouble("max_salary");
-
     }
 
-    public int getJob_Id() {
-        return job_Id;
+    public int getJob_id() {
+        return job_id;
     }
 
-    public void setJob_Id(int job_Id) {
-        this.job_Id = job_Id;
+    public void setJob_id(int job_id) {
+        this.job_id = job_id;
     }
 
     public String getJob_title() {
@@ -57,14 +62,25 @@ public class Jobs {
         this.max_salary = max_salary;
     }
 
+    public ArrayList<LinkDto> getLinks() {
+        return links;
+    }
+
+    public void addLink(String url, String rel) {
+        LinkDto link = new LinkDto();
+        link.setLink(url);
+        link.setRel(rel);
+        links.add(link);
+    }
+
     @Override
     public String toString() {
-        return "jobs{" +
-                "job_Id=" + job_Id +
+        return "JobsDto{" +
+                "job_id=" + job_id +
                 ", job_title='" + job_title + '\'' +
                 ", min_salary=" + min_salary +
                 ", max_salary=" + max_salary +
+                ", links=" + links +
                 '}';
     }
-
 }
