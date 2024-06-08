@@ -1,4 +1,5 @@
 package org.example.Controller;
+
 import jakarta.ws.rs.core.*;
 import org.example.dto.JobFilterDto;
 import org.example.dao.JobsDAO;

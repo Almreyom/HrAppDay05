@@ -1,6 +1,5 @@
 package org.example.dao;
 
-
 import org.example.models.Jobs;
 
 import java.sql.*;
@@ -9,7 +8,7 @@ import java.util.ArrayList;
 public class JobsDAO {
 
 
-    private static final String URL = "jdbc:sqlite:C:\\Users\\dev\\IdeaProjects\\HrAppDay08\\hr.db";
+    private static final String URL = "jdbc:sqlite:C:\\Users\\dev\\IdeaProjects\\JavaCourse\\src\\main\\java\\Day4\\hr.db";
     private  static final String SELECT_ALL_JOBS = "select * from jobs";
     private static final String SELECT_ONE_JOBS = "select * from jobs where job_id = ?";
     private static final String SELECT_JOB_WITH_MIN_SALARY_PAGINATION = "select * from jobs where min_salary = ?";
