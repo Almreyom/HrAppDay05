@@ -4,7 +4,7 @@ package org.example.exceptions;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import org.example.FilterDto.ErrorMessage;
+import org.example.dto.ErrorMessage;
 
 @Provider
 public class DataNotFoundExceptionMapper implements ExceptionMapper<DataNotFoundException> {
