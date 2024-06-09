@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>HrAppDay08</artifactId>
+    <artifactId>HrAppDay09</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>HrAppDay08</name>
+    <name>HrAppDay09</name>
 
     <build>
-        <finalName>HrAppDay08</finalName>
+        <finalName>HrAppDay09</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
