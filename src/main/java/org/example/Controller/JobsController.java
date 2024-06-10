@@ -1,11 +1,13 @@
 package org.example.Controller;
 
 import jakarta.ws.rs.core.*;
+import org.example.Mappers.JobMapper;
 import org.example.dto.JobFilterDto;
 import org.example.dao.JobsDAO;
 import jakarta.ws.rs.*;
 
 import org.example.dto.JobsDto;
+
 import org.example.exceptions.DataNotFoundException;
 import org.example.models.Jobs;
 
@@ -20,7 +22,6 @@ import java.util.ArrayList;
 public class JobsController {
 
     JobsDAO dao = new JobsDAO();
-    Jobs jobs = new Jobs();
     @Context UriInfo uriInfo;
     @Context HttpHeaders headers;
 
@@ -75,13 +76,9 @@ public class JobsController {
             }
             //headers.getAcceptableMediaTypes().contains(MediaType.valueOf(MediaType.APPLICATION_XML) {
 
-            JobsDto dto = new JobsDto();
-            dto.setJob_id(job.getJob_Id());
-            dto.setJob_title(job.getJob_title());
-            dto.setMin_salary(job.getMin_salary());
-            dto.setMax_salary(job.getMax_salary());
-
+            JobsDto dto = JobMapper.INSTANCE.toDeptDto(job);
             addLinks(dto);
+
             return Response.ok(dto).build();
             /* return Response
                     .ok(dto)
@@ -135,7 +132,7 @@ public class JobsController {
     public void UPDATE_JOB(@PathParam("job_id") int job_id, Jobs job) {
 
         try {
-            job.setJob_Id(job_id);
+            job.setJob_id(job_id);
             dao.updateJob(job);
         } catch (Exception e) {
             throw new RuntimeException(e);

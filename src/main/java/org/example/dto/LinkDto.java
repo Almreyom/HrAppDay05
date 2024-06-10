@@ -1,6 +1,5 @@
 package org.example.dto;
 
-
 public class LinkDto {
 
     private String link;
